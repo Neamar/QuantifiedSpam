@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
                         new NotificationCompat.Builder(MainActivity.this)
                                 .setSmallIcon(R.mipmap.ic_launcher)
                                 .setContentTitle("My notification")
+                                .setSubText("Account name")
                                 .setContentText("Hello World!");
 
                 // Sets an ID for the notification

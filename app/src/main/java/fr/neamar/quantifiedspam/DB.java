@@ -20,6 +20,7 @@ public class DB extends SQLiteOpenHelper {
                     "ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     "packageName TEXT," +
                     "title TEXT, " +
+                    "account TEXT," +
                     "date TEXT, " +
                     "hour INTEGER, " +
                     "hasVibration BOOLEAN NOT NULL CHECK (hasVibration IN (0,1)), " +
@@ -41,7 +42,7 @@ public class DB extends SQLiteOpenHelper {
 
     }
 
-    public static void insertNotification(Context context, String packageName, String title, boolean hasVibration, boolean hasSound) {
+    public static void insertNotification(Context context, String packageName, String title, String account, boolean hasVibration, boolean hasSound) {
         Date now = new Date();
         String date = dateAsString.format(now);
         int hour = now.getHours();
@@ -50,6 +51,7 @@ public class DB extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put("packageName", packageName);
         values.put("title", title);
+        values.put("account", account);
         values.put("date", date);
         values.put("hour", hour);
         values.put("hasVibration", hasVibration);
