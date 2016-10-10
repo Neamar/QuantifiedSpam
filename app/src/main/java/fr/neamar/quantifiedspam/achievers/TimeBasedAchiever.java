@@ -5,21 +5,10 @@ import android.content.SharedPreferences;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
 
-public class GlobalAchiever extends Achiever {
-    public GlobalAchiever() {
-        super("GlobalAchiever", "Global notification achievement", new String[]{
-                "",
-                "",
-                "Getting the hang of it",
-                "You have friends!",
-                "You have friends and family!",
-                "Spam!",
-                "Spammed!",
-                "Spammedest!",
-                "Spammedestest!",
-                "tl;dr",
-                "Machine learner"
-        });
+
+public abstract class TimeBasedAchiever extends Achiever {
+    public TimeBasedAchiever(String tag, String humanTag, String[] names) {
+        super(tag, humanTag, names);
     }
 
     @Override
@@ -28,7 +17,17 @@ public class GlobalAchiever extends Achiever {
         int currentMilestoneIndex = prefs.getInt(getPrefsKey("milestoneIndex"), 0);
         int currentMilestone = MILESTONES[currentMilestoneIndex];
 
-        int currentValue = prefs.getInt(getPrefsKey("count"), 0);
+        int currentBucket = getTimeBucketKey();
+        int lastKnownBucket = prefs.getInt(getPrefsKey("currentBucket"), -1);
+
+        int currentValue;
+        if(currentBucket == lastKnownBucket) {
+            currentValue = prefs.getInt(getPrefsKey("count"), 0);
+        }
+        else {
+            currentValue = 0;
+            editor.putInt(getPrefsKey("currentBucket"), currentBucket);
+        }
 
         // Increment value locally
         currentValue += 1;
@@ -36,17 +35,19 @@ public class GlobalAchiever extends Achiever {
         // Store new value
         editor.putInt(getPrefsKey("count"), currentValue);
 
-        Log.i(tag, String.format("Current: %s [%s]", currentValue, currentMilestone));
+        Log.i(tag, String.format("In bucket %s: %s [%s]", currentBucket, currentValue, currentMilestone));
 
         if (currentValue >= currentMilestone) {
             String name = achievementNames[Math.min(currentMilestoneIndex, achievementNames.length - 1)];
             Log.i(tag, String.format("Unlocked potential achievement: %s (%s)", name, currentValue));
 
             if (!name.isEmpty()) {
-                unlockAchievement(context, getPrefsKey(Integer.toString(currentMilestone)), name, String.format("Get %s notifications in total", currentValue), humanTag);
+                unlockAchievement(context, getPrefsKey(Integer.toString(currentMilestone)), name, String.format("Get %s notifications in a single day", currentValue), humanTag);
             }
 
             editor.putInt(getPrefsKey("milestoneIndex"), currentMilestoneIndex + 1);
         }
     }
+
+    protected abstract int getTimeBucketKey();
 }

@@ -16,31 +16,40 @@ import static android.content.Context.NOTIFICATION_SERVICE;
  */
 
 public abstract class Achiever {
-    public final String TAG = "Achiever";
+    public final String tag;
+    public final String humanTag;
+    public final String[] achievementNames;
 
-    public static final int[] MILESTONES = new int[] {
+    public static final int[] MILESTONES = new int[]{
             10, 50, 100, 500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, Integer.MAX_VALUE
     };
 
-    public static Achiever[] achievers = new Achiever[] {
+    public static Achiever[] achievers = new Achiever[]{
             new GlobalAchiever(),
+            new DayAchiever(),
     };
 
     public static void onNotificationReceived(Context context, StatusBarNotification sbn) {
         SharedPreferences prefs = context.getSharedPreferences("achievements_data", context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
-        for(Achiever achiever: achievers) {
+        for (Achiever achiever : achievers) {
             achiever.onNotificationReceived(context, sbn, prefs, editor);
         }
 
         editor.apply();
     }
 
+    public Achiever(String tag, String humanTag, String[] names) {
+        this.tag = tag;
+        this.humanTag = humanTag;
+        achievementNames = names;
+    }
+
     public abstract void onNotificationReceived(Context context, StatusBarNotification sbn, SharedPreferences prefs, SharedPreferences.Editor editor);
 
     public void unlockAchievement(Context context, String id, String title, String description, String achievementType) {
-        Log.e(TAG, "Unlocked achievement " + id + ": " + title + " " + description);
+        Log.e(tag, "Unlocked achievement " + id + ": " + title + " " + description);
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
@@ -56,6 +65,6 @@ public abstract class Achiever {
     }
 
     public String getPrefsKey(String name) {
-        return this.TAG + "_" + name;
+        return this.tag + "_" + name;
     }
 }
