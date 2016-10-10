@@ -9,6 +9,7 @@ import android.util.Log;
 
 import fr.neamar.quantifiedspam.R;
 
+import static android.content.Context.MODE_PRIVATE;
 import static android.content.Context.NOTIFICATION_SERVICE;
 
 /**
@@ -27,10 +28,11 @@ public abstract class Achiever {
     public static Achiever[] achievers = new Achiever[]{
             new GlobalAchiever(),
             new DayAchiever(),
+            new WeekAchiever(),
     };
 
     public static void onNotificationReceived(Context context, StatusBarNotification sbn) {
-        SharedPreferences prefs = context.getSharedPreferences("achievements_data", context.MODE_PRIVATE);
+        SharedPreferences prefs = context.getSharedPreferences("achievements_data", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
         for (Achiever achiever : achievers) {
@@ -64,7 +66,7 @@ public abstract class Achiever {
         mNotifyMgr.notify(2, mBuilder.build());
     }
 
-    public String getPrefsKey(String name) {
+    protected String getPrefsKey(String name) {
         return this.tag + "_" + name;
     }
 }
