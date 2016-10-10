@@ -4,10 +4,14 @@ import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
 
+import fr.neamar.quantifiedspam.achievers.Achiever;
+
 /**
  * Created by neamar on 27/09/16.
  */
 public class NotificationListener extends NotificationListenerService {
+    public static final String TAG = "NotificationListener";
+
     @Override
     public void onNotificationRemoved(StatusBarNotification sbn) {
         super.onNotificationRemoved(sbn);
@@ -16,9 +20,18 @@ public class NotificationListener extends NotificationListenerService {
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
         NotificationParser notificationParser = new NotificationParser(sbn);
-        DB.insertNotification(getBaseContext(), notificationParser.getPackageName(), notificationParser.getTitle(), notificationParser.getAccount(), notificationParser.hasVibration(), notificationParser.hasSound());
 
-        Log.e("WTF", notificationParser.getPackageName() + " => " + notificationParser.getTitle() + " [" + notificationParser.getAccount() + "]");
+        String packageName = notificationParser.getPackageName();
+        String title = notificationParser.getTitle();
+        String account = notificationParser.getAccount();
+        Log.i(TAG, String.format("%s => %s [%s]", packageName, title, account));
+
+        // Write to DB
+        DB.insertNotification(getBaseContext(),packageName , title, account, notificationParser.hasVibration(), notificationParser.hasSound());
+
+        // Unlock achievements
+        Achiever.onNotificationReceived(getBaseContext(), sbn);
+
         super.onNotificationPosted(sbn);
     }
 }
