@@ -1,7 +1,9 @@
 package fr.neamar.quantifiedspam.achievers;
 
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.service.notification.StatusBarNotification;
 import android.support.v4.app.NotificationCompat;
@@ -11,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import fr.neamar.quantifiedspam.MainActivity;
 import fr.neamar.quantifiedspam.R;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -57,12 +60,18 @@ public abstract class Achiever {
     public void unlockAchievement(Context context, String id, String title, String description, String achievementType) {
         Log.e(tag, "Unlocked achievement " + id + ": " + title + " " + description);
 
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, id.hashCode(), intent,
+                PendingIntent.FLAG_ONE_SHOT);
+
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setContentTitle(title)
-                        .setSubText(description)
-                        .setContentText(achievementType);
+                        .setSubText(achievementType)
+                        .setContentIntent(pendingIntent)
+                        .setContentText(description);
 
         NotificationManager mNotifyMgr =
                 (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);

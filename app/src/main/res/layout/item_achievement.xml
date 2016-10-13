@@ -33,5 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/achievement_description"
         android:layout_alignParentRight="true"
+        android:textColor="@color/colorAccent"
+        android:textSize="9sp"
         android:id="@+id/achievement_type" />
 </RelativeLayout>
