@@ -7,6 +7,10 @@ import android.service.notification.StatusBarNotification;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import fr.neamar.quantifiedspam.R;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -57,13 +61,33 @@ public abstract class Achiever {
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setContentTitle(title)
-                        .setSubText(achievementType)
-                        .setContentText(description);
+                        .setSubText(description)
+                        .setContentText(achievementType);
 
         NotificationManager mNotifyMgr =
                 (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
         // Builds the notification and issues it.
         mNotifyMgr.notify(2, mBuilder.build());
+
+        SharedPreferences prefs = context.getSharedPreferences("achievements_unlocked", MODE_PRIVATE);
+
+        try {
+            JSONArray achievements = new JSONArray(prefs.getString("achievements", "[]"));
+
+            JSONObject achievement = new JSONObject();
+            achievement.put("id", id);
+            achievement.put("title", title);
+            achievement.put("description", description);
+            achievement.put("type", achievementType);
+
+            achievements.put(achievement);
+
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString("achievements", achievements.toString());
+            editor.apply();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     protected String getPrefsKey(String name) {
