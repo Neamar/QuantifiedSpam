@@ -4,7 +4,7 @@ import java.util.Calendar;
 
 public class DayAchiever extends TimeBasedAchiever {
     public DayAchiever() {
-        super("DayAchiever", "Day notification achievement", new String[]{
+        super("DayAchiever", "Day notification achievement", "day", new String[]{
                 "Just warming up",
                 "Another day in the office",
                 "Busy day in the office",

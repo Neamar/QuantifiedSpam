@@ -21,6 +21,11 @@ public class NotificationListener extends NotificationListenerService {
     public void onNotificationPosted(StatusBarNotification sbn) {
         NotificationParser notificationParser = new NotificationParser(sbn);
 
+        if(!notificationParser.shouldBeTracked()) {
+            Log.e("WTF", "Ignoring notification");
+            return;
+        }
+
         String packageName = notificationParser.getPackageName();
         String title = notificationParser.getTitle();
         String account = notificationParser.getAccount();

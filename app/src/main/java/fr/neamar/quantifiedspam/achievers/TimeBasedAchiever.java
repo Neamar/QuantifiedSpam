@@ -7,8 +7,10 @@ import android.util.Log;
 
 
 public abstract class TimeBasedAchiever extends Achiever {
-    public TimeBasedAchiever(String tag, String humanTag, String[] names) {
+    private String durationName;
+    public TimeBasedAchiever(String tag, String humanTag, String durationName, String[] names) {
         super(tag, humanTag, names);
+        this.durationName = durationName;
     }
 
     @Override
@@ -42,7 +44,7 @@ public abstract class TimeBasedAchiever extends Achiever {
             Log.i(tag, String.format("Unlocked potential achievement: %s (%s)", name, currentValue));
 
             if (!name.isEmpty()) {
-                unlockAchievement(context, getPrefsKey(Integer.toString(currentMilestone)), name, String.format("Get %s notifications in a single day", currentValue), humanTag);
+                unlockAchievement(context, getPrefsKey(Integer.toString(currentMilestone)), name, String.format("Get %s notifications in a single %s", currentValue, durationName), humanTag);
             }
 
             editor.putInt(getPrefsKey("milestoneIndex"), currentMilestoneIndex + 1);

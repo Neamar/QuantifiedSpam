@@ -39,4 +39,9 @@ public class NotificationParser {
     public String getAccount() {
         return notification.extras.getString(Notification.EXTRA_SUB_TEXT, "");
     }
+
+    public boolean shouldBeTracked() {
+        boolean isOngoing = ((notification.flags & Notification.FLAG_ONGOING_EVENT) == Notification.FLAG_ONGOING_EVENT);
+        return !isOngoing;
+    }
 }

@@ -1,5 +1,6 @@
 package fr.neamar.quantifiedspam;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -48,7 +49,9 @@ public class MainActivity extends AppCompatActivity {
                 NotificationManager mNotifyMgr =
                         (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                 // Builds the notification and issues it.
-                mNotifyMgr.notify(mNotificationId, mBuilder.build());
+                Notification notification = mBuilder.build();
+
+                mNotifyMgr.notify(mNotificationId, notification);
             }
         });
 

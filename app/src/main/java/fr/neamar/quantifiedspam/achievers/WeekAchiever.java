@@ -4,7 +4,7 @@ import java.util.Calendar;
 
 public class WeekAchiever extends TimeBasedAchiever {
     public WeekAchiever() {
-        super("WeekAchiever", "Week notification achievement", new String[]{
+        super("WeekAchiever", "Week notification achievement", "week", new String[]{
                 "",
                 "",
                 "",
