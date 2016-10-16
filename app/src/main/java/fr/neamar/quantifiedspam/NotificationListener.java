@@ -22,7 +22,7 @@ public class NotificationListener extends NotificationListenerService {
         NotificationParser notificationParser = new NotificationParser(sbn);
 
         if(!notificationParser.shouldBeTracked()) {
-            Log.e("WTF", "Ignoring notification");
+            Log.v(TAG, "Ignoring notification from " + notificationParser.getPackageName());
             return;
         }
 
